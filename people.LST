@@ -1,0 +1,134 @@
+C51 COMPILER V9.50a   PEOPLE                                                               09/17/2024 15:56:04 PAGE 1   
+
+
+C51 COMPILER V9.50a, COMPILATION OF MODULE PEOPLE
+OBJECT MODULE PLACED IN people.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE people.c BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include<reg51.h>
+   2          
+   3          #define lcd P2
+   4          sbit rs=P0^0;
+   5          sbit en=P0^3;
+   6          
+   7          sbit ir1=P1^7;
+   8          sbit ir2=P1^0;
+   9          
+  10          void lcd_init(void);
+  11          void cmd(unsigned char);
+  12          void Data(unsigned char);
+  13          void lcd_string(unsigned char *);
+  14          void delay(unsigned int);
+  15          void IntegerDisplay(unsigned int);
+  16          
+  17          unsigned int count=0;
+  18          
+  19          void main(void)
+  20          {
+  21   1        lcd_init();
+  22   1        
+  23   1      
+  24   1        while(1)
+  25   1        {
+  26   2          cmd(0x80);
+  27   2          lcd_string("People count:");
+  28   2          cmd(0xc8);
+  29   2          if(ir1==1)
+  30   2          {
+  31   3            while(ir1==1);
+  32   3            while(ir2==0);
+  33   3            while(ir2==1);
+  34   3            count++;
+  35   3          }
+  36   2          else if(ir2==1)
+  37   2          {
+  38   3            while(ir2==1);
+  39   3            while(ir1==0);
+  40   3            while(ir1==1);
+  41   3            if(count>0)
+  42   3            {
+  43   4              count--;
+  44   4            }
+  45   3          }
+  46   2          IntegerDisplay(count);
+  47   2        }
+  48   1      }
+  49          
+  50          void lcd_init(void)
+  51          {
+  52   1        cmd(0x38);
+  53   1        cmd(0x0e);
+  54   1        cmd(0x06);
+  55   1        cmd(0x01);
+C51 COMPILER V9.50a   PEOPLE                                                               09/17/2024 15:56:04 PAGE 2   
+
+  56   1        cmd(0x0c);
+  57   1      }
+  58          
+  59          void cmd(unsigned char ch)
+  60          {
+  61   1        lcd=ch;
+  62   1        rs=0;
+  63   1        en=1;
+  64   1        delay(1000);
+  65   1        en=0;
+  66   1      }
+  67          
+  68          void Data(unsigned char ch)
+  69          {
+  70   1        lcd=ch;
+  71   1        rs=1;
+  72   1        en=1;
+  73   1        delay(1000);
+  74   1        en=0;
+  75   1      }
+  76          
+  77          void lcd_string(unsigned char *s)
+  78          {
+  79   1        while(*s)
+  80   1          Data(*s++);
+  81   1      }
+  82          
+  83          void delay(unsigned int n)
+  84          {
+  85   1        int i;
+  86   1        for(i=0;i<n;i++);
+  87   1      }
+  88          
+  89          void IntegerDisplay(unsigned int num)
+  90          {
+  91   1        cmd(0x04);
+  92   1        if(num==0)
+  93   1        {
+  94   2          Data('0');
+  95   2        }
+  96   1        else
+  97   1        {
+  98   2          while(num!=0)
+  99   2          {
+ 100   3            Data((num%10)+'0');
+ 101   3            num/=10;
+ 102   3          }
+ 103   2        }
+ 104   1        cmd(0x06);
+ 105   1      }
+ 106          
+ 107            
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    258    ----
+   CONSTANT SIZE    =     14    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+C51 COMPILER V9.50a   PEOPLE                                                               09/17/2024 15:56:04 PAGE 3   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
